@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Linq;
+using Blog.Data;
+using Blog.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog
 {
@@ -6,7 +10,26 @@ namespace Blog
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using (var context = new BlogDataContext())
+            {
+                // CREATE
+                // context.Model.Add;
+                // context.SaveChanges();
+
+                // READ
+                // context.Model.AsNoTracking().ToList();
+                // context.Model.AsNoTracking().FirstOrDefault(x => x.Id == id);
+
+                // UPDATE
+                // var data = context.Model.AsNoTracking().FirstOrDefault(x => x.Id == id);
+                // context.Model.Update(data);
+                // context.SaveChanges();
+
+                // DELETE
+                // var data = context.Model.AsNoTracking().FirstOrDefault(x => x.Id == id);
+                // context.Model.Delete(data);
+                // context.SaveChanges();
+            }
         }
     }
 }
