@@ -10,26 +10,41 @@ namespace Blog
     {
         static void Main(string[] args)
         {
-            using (var context = new BlogDataContext())
+            // Utilização de using para dispose automático da classe.
+            using var context = new BlogDataContext();
+
+            var user = new User
             {
-                // CREATE
-                // context.Model.Add;
-                // context.SaveChanges();
+                Name = "Xablau",
+                Slug = "xablau",
+                Email = "xablau@email.com",
+                Bio = "Master of chaos and codes",
+                Image = "http://i.imgur.com/LgKYu37.png",
+                PasswordHash = "$2y$10$HTzRb6KfMkrzUYrhEbvuq.9Qf8Bo2gatafj9wi2c890P6sjNNCBWm"
+            };
 
-                // READ
-                // context.Model.AsNoTracking().ToList();
-                // context.Model.AsNoTracking().FirstOrDefault(x => x.Id == id);
+            var category = new Category
+            {
+                Name = "Infra",
+                Slug = "infra"
+            };
 
-                // UPDATE
-                // var data = context.Model.AsNoTracking().FirstOrDefault(x => x.Id == id);
-                // context.Model.Update(data);
-                // context.SaveChanges();
+            var post = new Post
+            {
+                Author = user,
+                Category = category,
+                Body = "<p>Hello World</p>",
+                Slug = "comecando-com-docker",
+                Summary = "Neste artigo vamos aprender Docker",
+                Title = "Começando com Docker",
+                CreateDate = DateTime.Now,
+                LastUpdateDate = DateTime.Now
+            };
 
-                // DELETE
-                // var data = context.Model.AsNoTracking().FirstOrDefault(x => x.Id == id);
-                // context.Model.Delete(data);
-                // context.SaveChanges();
-            }
+            // EF gerencia as entidades de modo a entender seus relacionamentos
+            // e os insere na ordem correta no banco como uma Transaction.
+            context.Posts.Add(post);
+            context.SaveChanges();
         }
     }
 }
