@@ -89,3 +89,23 @@ var tag = context.Tags.FirstOrDefault(x => x.Id == 2);
 context.Tags.Delete(tag);
 context.SaveChanges();
 ```
+
+## Mapeamento
+
+Entende-se por mapeamento como "dê/para", de relacional para objeto.
+
+Uma classe (Entidade) representará a uma tabela do banco de dados, onde as propriedades são as colunas.
+
+Com mapeamento é possível gerar o banco automaticamente.
+
+#### Tipos de Mapeamento com EF Core
+
+##### Fluent Mapping
+
+São feitos em classe externa, logo não criam dependências na classe/projeto principal e não "poluem" a classe entidade.
+
+##### Data Annotations
+
+São feitos diretamente nas classes, são mais simples e diretos. Dependem do System.ComponentModel.DataAnnotations e por vezes do Microsoft.EntityFrameworkCore.
+
+São utilizados para gerar metadados sobre as classes, são utilizados com o uso do [].
