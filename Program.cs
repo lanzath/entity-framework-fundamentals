@@ -10,26 +10,27 @@ namespace Blog
     {
         static void Main(string[] args)
         {
-            using (var context = new BlogDataContext())
+            using var context = new BlogDataContext();
+
+            var user = context.Users.FirstOrDefault();
+            var category = context.Categories.FirstOrDefault();
+            var post = new Post
             {
-                // CREATE
-                // context.Model.Add;
-                // context.SaveChanges();
+                Author = user,
+                Body = "Meu artigo",
+                Category = new Category
+                {
+                    Name = "Teste",
+                    Slug = "teste"
+                },
+                CreateDate = DateTime.Now,
+                Slug = "meu-artigo",
+                Summary = "Neste artigo vamos conferir...",
+                Title = "Meu artigo"
+            };
 
-                // READ
-                // context.Model.AsNoTracking().ToList();
-                // context.Model.AsNoTracking().FirstOrDefault(x => x.Id == id);
-
-                // UPDATE
-                // var data = context.Model.AsNoTracking().FirstOrDefault(x => x.Id == id);
-                // context.Model.Update(data);
-                // context.SaveChanges();
-
-                // DELETE
-                // var data = context.Model.AsNoTracking().FirstOrDefault(x => x.Id == id);
-                // context.Model.Delete(data);
-                // context.SaveChanges();
-            }
+            context.Posts.Add(post);
+            context.SaveChanges();
         }
     }
 }

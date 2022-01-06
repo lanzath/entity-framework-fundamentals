@@ -141,3 +141,19 @@ post.Author.Name = "Foo Bar"; // Atualizará o nome do autor a qual o post perte
 context.Posts.Update(post);
 context.SaveChanges();
 ```
+
+#### Migrations
+
+Dado um mapeammento, seja este feito através de _fluent mapping_ ou _data annotation_, é possível gerar um banco de dados a partir deste mapeamento.
+
+##### Criando migrations
+
+`dotnet ef migrations add NomeDaMigration`
+
+Ao executar este comando pela primeira vez serão gerados 3 arquivos, que serão estes responsáveis pela geração do banco de dados baseado nas entidades mapeadas.
+
+O arquivo snapshot é um versionamento das migrations.
+
+Também é gerada uma tabela adicional para controle de migrations aplicadas ao banco.
+
+Também é possível gerar o script executado pelo EF com o comando `dotnet ef migrations script -o ./script.sql`
