@@ -109,3 +109,35 @@ São feitos em classe externa, logo não criam dependências na classe/projeto p
 São feitos diretamente nas classes, são mais simples e diretos. Dependem do System.ComponentModel.DataAnnotations e por vezes do Microsoft.EntityFrameworkCore.
 
 São utilizados para gerar metadados sobre as classes, são utilizados com o uso do [].
+
+**Exemplo de uma listagem de posts com relacionamento (Post pertence a um Autor)**
+
+```cs
+// Utilização de using para dispose automático da classe.
+using var context = new BlogDataContext();
+
+var posts = context
+    .Posts
+    .AsNoTracking()
+    .Include(x => x.Author) // Include serve como Join para carregar relacionamentos.
+    .Include(x => x.Category) // Traz a categoria relacionada ao post.
+    .OrderByDescending(x => x.LastUpdateDate)
+    .ToList();
+```
+
+**Exemplo de atualização de um registro a partir de seu relacionamento**
+
+```cs
+using var context = new BlogDataContext();
+
+var post = context
+    .Posts
+    .Include(x => x.Author) // Traz o autor relacionado ao post.
+    .Include(x => x.Category) // Traz a categoria relacionada ao post.
+    .OrderByDescending(x => x.LastUpdateDate) // Ordena pelo mais atual.
+    .FirstOrDefault(); // Pega o primeiro registro do select.
+
+post.Author.Name = "Foo Bar"; // Atualizará o nome do autor a qual o post pertence
+context.Posts.Update(post);
+context.SaveChanges();
+```

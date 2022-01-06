@@ -1,3 +1,4 @@
+using System;
 using Blog.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,9 @@ namespace Blog.Data
 
         // Configuração de conexão com o DB.
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlServer(CONNECTION_STRING);
+        {
+            options.UseSqlServer(CONNECTION_STRING);
+            options.LogTo(Console.WriteLine); // Exibe um log de queries executadas no console.
+        }
     }
 }
