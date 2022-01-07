@@ -157,3 +157,78 @@ O arquivo snapshot é um versionamento das migrations.
 Também é gerada uma tabela adicional para controle de migrations aplicadas ao banco.
 
 Também é possível gerar o script executado pelo EF com o comando `dotnet ef migrations script -o ./script.sql`
+
+#### Performance
+
+##### AsNoTracking
+
+Utilizado para apenas leitura, como não traz junto os metadados de uma entidade, ele otimiza a leitura descartando informações adicionais que não são necessárias para leitura.
+
+Não deve ser utilizado ao fazer `INSERTS`, `UPDATES` ou `DELETES`.
+
+**Exemplo**
+
+```cs
+using var context = new BlogDataContext();
+// Se necessário fazer um update ou delete, não utiliza-se o AsNoTracking.
+var post = context.Posts.FirstOrDefault(x => x.Id == 3);
+
+// Como serão apenas exibidos os dados, não há necessidade dos metadados
+// para melhora de performance utiliza-se o AsNoTracking().
+var posts = context.Posts.AsNoTracking().ToList();
+```
+
+##### Async/Await
+
+Async e Await é a possibilidade de trabalhar de maneira assíncrona com execução de tarefas em paralelo, no Entity Framework métodos que são assíncronos possuem o sufixo Async e retornam uma **Task** (System.Threading.Tasks).
+
+Métodos assíncronos não esperam por uma execução, a menos que seja utilizado o Await.
+
+**Exemplo**
+
+```cs
+static async Task Main(string[] args)
+{
+    using var context = new BlogDataContext();
+
+    // Caso não seja empregado o uso do await, o programa não irá aguardar
+    // a instrução, sendo assim, a string "Teste" será exibida primeira no console.
+    var post = await context.Posts.ToListAsync();
+    var tags = await context.Tags.ToListAsyn();
+
+    Console.WriteLine("Teste");
+}
+```
+
+##### Eager Loading/Lazy Loading
+
+Lazy loading pode ser entendido como "carregamento preguiçoso" pois os dados só serão carregados quando chamados.
+
+Por padrão o EF trabalha com Eager Loading (carregamento tardio), pois é necessário explicitar quando os dados devem ser carregados, para incluir relacionamentos deve-se utilizar o Include(), assim o EF faz uma query mais otimizada.
+
+```cs
+using var context = new BlogDataContext();
+
+// As tags serão carregadas por Eager Loading.
+var post = context.Posts.Include(x => x.Tags);
+
+```
+
+##### Paginação
+
+Em grandes aplicações não é indicado trazer todo conteúdo de um banco de dados de uma vez, para isso o EF nos oferece a opção de paginar nossa busca com o _Skip_ e _Take_ conforme o exemplo abaixo.
+
+```cs
+public List<Post> GetPosts(BlogDataContext context, int skip = 0, int take = 25)
+{
+    // Traz o resultado paginado de 25 em 25
+    var posts = context
+        .Posts
+        .AsNoTracking()
+        .Skip(skip)
+        .Take(take)
+        .ToList();
+
+    return posts;
+}
+```
